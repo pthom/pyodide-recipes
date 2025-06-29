@@ -86,9 +86,13 @@ jobs:
           which python
           echo y | python -m pip install -r requirements.txt
 
+      - name: Setup interactive tmate session
+        if: ${{ matrix.platform == 'ubuntu-latest' }}
+        uses: mxschmitt/action-tmate@v3
+
       - name: Run tests
         run: |
-          pytest -v \
+          pytest -v -rs \
             --dist-dir=./dist/ \
             -n $(nproc) \
             --runner=${{ matrix.test-config.runner }} \
