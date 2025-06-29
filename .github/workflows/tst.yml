@@ -62,3 +62,10 @@ jobs:
       - name: Install emscripten
         run: |
           python tools/install_and_patch_emscripten.py
+
+      - name: Build recipes (imgui bundle)
+        run: |
+          export PIP_CONSTRAINT=$(pwd)/tools/constraints.txt
+          source emsdk/emsdk_env.sh
+          mkdir -p result
+          pyodide build-recipes numpy typing-extensions pydantic munch imgui-bundle --install --install-dir=./repodata --log-dir=build-logs | tee result/build_output.log
