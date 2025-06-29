@@ -8,9 +8,6 @@ on:
   pull_request:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
-  schedule:
-    # Twice per week, on Monday and Thursday
-    - cron: "0 0 * * 1,4"
 
 permissions:
   contents: write
@@ -84,12 +81,17 @@ jobs:
           browser: ${{ matrix.test-config.runtime }}
           browser-version: ${{ matrix.test-config.runtime-version }}
 
-#      - name: Run tests
-#        run: |
-#          pytest -v \
-#            --dist-dir=./dist/ \
-#            -n $(nproc) \
-#            --runner=${{ matrix.test-config.runner }} \
-#            --rt ${{ matrix.test-config.runtime }} \
-#            packages
+      - name: Install test dependencies
+        run: |
+          which python
+          echo y | python -m pip install -r requirements.txt
+
+      - name: Run tests
+        run: |
+          pytest -v \
+            --dist-dir=./dist/ \
+            -n $(nproc) \
+            --runner=${{ matrix.test-config.runner }} \
+            --rt ${{ matrix.test-config.runtime }} \
+            packages/imgui-bundle
 
